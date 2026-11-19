@@ -1,0 +1,178 @@
+{
+ "Adrenaline": {
+  "categories": [
+   "navigation",
+   "adaptation"
+  ],
+  "name": "Adrenaline",
+  "description": "When all Generators are completed, if you are downed or injured, heal instantly. Then, ignoring {Keyword.Exhausted}:<ul><li>You gain {Tunable.S02P03.Haste%}% {Keyword.Haste} for {Tunable.S02P03.HasteDuration}s.</li><li>You gain {Keyword.Exhausted} for {Tunable.S02P03.ExhaustionDuration}s.</li></ul>",
+  "role": "survivor",
+  "character": 1,
+  "tunables": {
+   "exhaustionduration": [
+    60,
+    50,
+    40
+   ],
+   "haste%": [
+    50
+   ],
+   "hasteduration": [
+    4
+   ]
+  },
+  "teachable": 40,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/iconPerks_adrenaline"
+ },
+ "BBQAndChilli": {
+  "categories": [
+   "tracking"
+  ],
+  "name": "Barbecue & Chili",
+  "description": "Whenever you hook a Survivor, for {Tunable.K09P02.AuraRevealDuration}s, you see the Auras of all Survivors who are at least {Tunable.K09P02.MinDistanceFromHook}m away from the hooked Survivor.",
+  "role": "killer",
+  "character": 268435464,
+  "tunables": {
+   "modifygeneratorkickdamageadditive%": [
+    1,
+    3,
+    5
+   ],
+   "aurarevealduration": [
+    5
+   ],
+   "mindistancefromhook": [
+    60,
+    50,
+    40
+   ]
+  },
+  "teachable": 35,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/Cannibal/iconPerks_BBQAndChili"
+ },
+ "DeadHard": {
+  "categories": [
+   "navigation",
+   "adaptation"
+  ],
+  "name": "Dead Hard",
+  "description": "Whenever you are unhooked, while injured and running, use {Input.ActivatableButton1}:<ul><li>You gain {Keyword.Endurance} for {Tunable.S10P02.EnduranceDuration}s.</li><li>You gain {Keyword.Exhausted} for {Tunable.S10P02.ExhaustedDuration}s.</li></ul>",
+  "role": "survivor",
+  "character": 9,
+  "tunables": {
+   "enduranceduration": [
+    0.5
+   ],
+   "exhaustedduration": [
+    60,
+    50,
+    40
+   ]
+  },
+  "teachable": 35,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/DLC5/iconPerks_DeadHard"
+ },
+ "Deja_Vu": {
+  "categories": [
+   "perception"
+  ],
+  "name": "Deja Vu",
+  "description": "You see the Auras of the {Tunable.SG_Deja_Vu.GeneratorsShown} Generators closest to each other and repair them {Tunable.SG_Deja_Vu.RepairSpeed%}% faster.",
+  "role": "survivor",
+  "character": null,
+  "tunables": {
+   "generatorsshown": [
+    3
+   ],
+   "repairspeed%": [
+    4,
+    5,
+    6
+   ]
+  },
+  "teachable": 0,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/iconPerks_dejaVu"
+ },
+ "Hex_Ruin": {
+  "categories": [
+   "obstruction"
+  ],
+  "name": "Hex: Ruin",
+  "description": "When the trial starts, a Dull Totem ignites.<br><br>While a Generator is not being repaired, it regresses at {Tunable.K05P02.RegressionSpeed%}% speed.",
+  "role": "killer",
+  "character": 268435460,
+  "tunables": {
+   "regressionspeed%": [
+    100,
+    125,
+    150
+   ]
+  },
+  "teachable": 35,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/DLC3/iconPerks_ruin"
+ },
+ "K26P02": {
+  "categories": null,
+  "name": "Scourge Hook: Pain Resonance",
+  "description": "When the trial starts:<ul><li>4 random Hooks become Scourge Hooks.</li><li>You earn {Tunable.K26P02.StartingTokens} Tokens.</li></ul><br><br>The first time each Survivor is hooked on a Scourge Hook, spend {Tunable.K26P02.TokensSpentOnUniqueHook} Token, then the Generator with the most progress:<ul><li>Explodes, loses {Tunable.K26P02.GeneratorRegression%}% progress and starts regressing.</li><li>Survivors repairing it scream.</li></ul>",
+  "role": "killer",
+  "character": 268435481,
+  "tunables": {
+   "generatorregression%": [
+    10,
+    15,
+    20
+   ],
+   "startingtokens": [
+    4
+   ],
+   "tokensspentonuniquehook": [
+    1
+   ]
+  },
+  "teachable": 35,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/Ion/T_iconPerks_painResonance"
+ },
+ "Kindred": {
+  "categories": [
+   "perception"
+  ],
+  "name": "Kindred",
+  "description": "While you are hooked, all Survivors see each others' Auras. While the Killer is within {Tunable.SG_Kindred.AuraRevealDistance}m, all Survivors sees the Killer's Aura.<br><br>While another Survivor is hooked, you see the Auras of other Survivors. While the Killer is within {Tunable.SG_Kindred.AuraRevealDistance}m of the hooked Survivor, you see the Killer's Aura.",
+  "role": "survivor",
+  "character": null,
+  "tunables": {
+   "aurarevealdistance": [
+    14,
+    15,
+    16
+   ]
+  },
+  "teachable": 0,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/iconPerks_kindred"
+ },
+ "Sprint_Burst": {
+  "categories": [
+   "navigation"
+  ],
+  "name": "Sprint Burst",
+  "description": "Whenever you start running:<ul><li>You gain {Tunable.S02P02.Haste%}% {Keyword.Haste} for {Tunable.S02P02.HasteDuration}s.</li><li>You gain {Keyword.Exhausted} for {Tunable.S02P02.ExhaustionDuration}s.</li></ul>",
+  "role": "survivor",
+  "character": 1,
+  "tunables": {
+   "exhaustionduration": [
+    60,
+    50,
+    40
+   ],
+   "haste%": [
+    50
+   ],
+   "hasteduration": [
+    2
+   ]
+  },
+  "teachable": 35,
+  "image": "/Game/UI/UMGAssets/Icons/Perks/iconPerks_sprintBurst"
+ }
+}
