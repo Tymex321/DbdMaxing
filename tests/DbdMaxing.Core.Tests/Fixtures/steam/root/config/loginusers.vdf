@@ -1,0 +1,33 @@
+"users"
+{
+	"76561198000000001"
+	{
+		"AccountName"		"old_smurf"
+		"PersonaName"		"Smurfy"
+		"RememberPassword"		"1"
+		"WantsOfflineMode"		"0"
+		"SkipOfflineModeWarning"		"0"
+		"AllowAutoLogin"		"1"
+		"MostRecent"		"0"
+		"Timestamp"		"1700000000"
+	}
+	"76561198012345678"
+	{
+		"AccountName"		"dwight_main"
+		"PersonaName"		"Dwight \"Leader\" Fairfield"
+		"RememberPassword"		"1"
+		"WantsOfflineMode"		"0"
+		"SkipOfflineModeWarning"		"0"
+		"AllowAutoLogin"		"1"
+		"MostRecent"		"1"
+		"Timestamp"		"1690000000"
+	}
+	"76561198099999999"
+	{
+		"AccountName"		"killer_alt"
+		"PersonaName"		"Hag Enjoyer"
+		"RememberPassword"		"0"
+		"MostRecent"		"0"
+		"Timestamp"		"1710000000"
+	}
+}
