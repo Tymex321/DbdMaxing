@@ -1,0 +1,29 @@
+name: 🔍 Scanner missed or misread a perk
+description: The perk scanner didn't recognise a perk you own, or detected one you don't own
+labels: [scanner]
+body:
+  - type: input
+    id: perks
+    attributes:
+      label: Which perk(s)?
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Problem
+      options: [Missed (owned but not detected), False positive (detected but not owned)]
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drag in a screenshot of the in-game screen where the perk is visible. This helps a lot.
+    validations:
+      required: true
+  - type: input
+    id: resolution
+    attributes:
+      label: Resolution and UI scale
+      placeholder: 1920x1080, UI scale 100%

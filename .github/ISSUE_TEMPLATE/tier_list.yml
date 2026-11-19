@@ -1,0 +1,16 @@
+name: 📈 Tier list / build suggestion
+description: Suggest a change to perk scores or synergies
+labels: [meta]
+body:
+  - type: textarea
+    id: change
+    attributes:
+      label: Suggested change
+      placeholder: "Raise `dead-hard` from 7 to 8 because ..."
+    validations:
+      required: true
+  - type: input
+    id: patch
+    attributes:
+      label: DBD patch version
+      placeholder: "9.3.0"

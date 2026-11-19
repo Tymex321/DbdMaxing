@@ -1,18 +1,70 @@
-# DbdMaxing
+<p align="center">
+  <img src="docs/assets/banner.svg" alt="DbdMaxing" width="100%">
+</p>
 
-A Windows tray app for **Dead by Daylight**. It notices when the game starts, learns which perks your account owns, and recommends the strongest **survivor** and **killer** builds you can actually run. It has a futuristic black and dark-purple interface.
+<p align="center">
+  <a href="https://github.com/Tymex321/DbdMaxing/actions/workflows/build.yml"><img src="https://github.com/Tymex321/DbdMaxing/actions/workflows/build.yml/badge.svg" alt="Build"></a>
+  <a href="https://github.com/Tymex321/DbdMaxing/releases/latest"><img src="https://img.shields.io/github/v/release/Tymex321/DbdMaxing?color=9D4DFF&label=release" alt="Release"></a>
+  <img src="https://img.shields.io/badge/platform-Windows%2010%2B-5B1A9E" alt="Platform">
+  <img src="https://img.shields.io/badge/.NET-8.0-3B0A6B" alt=".NET 8">
+  <img src="https://img.shields.io/badge/anti--cheat-safe-2ea043" alt="Anti-cheat safe">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Tymex321/DbdMaxing?color=8A7FA0" alt="License"></a>
+</p>
 
-## Download
+<p align="center">
+  <b>Your Dead by Daylight perks, scanned automatically. The best builds you can actually run.</b><br>
+  <sub>A Windows tray app that watches for DBD, learns which perks your account owns, and ranks the strongest survivor and killer loadouts.</sub>
+</p>
 
-1. Open the [Actions tab](https://github.com/Tymex321/DbdMaxing/actions) and click the latest green **build** run.
-2. Download the **DbdMaxing-win-x64** artifact and unzip it to get `DbdMaxing.exe`.
-3. Run it. The app is self-contained, so you don't need to install .NET.
+<p align="center">
+  <a href="#-download">Download</a> ·
+  <a href="#-features">Features</a> ·
+  <a href="#-how-it-works">How it works</a> ·
+  <a href="#-anti-cheat-safety">Anti-cheat</a> ·
+  <a href="#-tier-list">Tier list</a> ·
+  <a href="#-development">Development</a>
+</p>
 
-Tagged versions (`v*`) are also published on the [Releases page](https://github.com/Tymex321/DbdMaxing/releases).
+---
 
-> Windows SmartScreen may warn you because the exe isn't code-signed. Click **More info → Run anyway**.
+## ✨ Features
 
-## How it works
+| | |
+| --- | --- |
+| 🎮 **Auto game detection** | Notices DBD starting and stopping, and sends a tray notification |
+| 👤 **Steam account aware** | Picks up the logged-in Steam account with no login or API key, and keeps perks separate for each account |
+| 🔍 **Perk scanner** | Recognises perk icons on your loadout screen with OpenCV template matching |
+| 🧠 **Build optimizer** | Scores every 4-perk combination using tiers, synergies (Pentimento + Undying), anti-synergies and redundancy penalties |
+| 🔪 **Killer tuning** | Re-ranks builds for the killer you pick (Blight, Nurse, Huntress…) |
+| 🔒 **Anti-cheat safe** | Screenshots only: no memory reading, no injection, no packet sniffing |
+| 🌌 **Neon UI** | A borderless black and dark-purple interface with glowing perk diamonds |
+| 📝 **Editable tier list** | Plain JSON with optional per-user overrides |
+
+## 📥 Download
+
+1. Grab `DbdMaxing.exe` from the [**latest release**](https://github.com/Tymex321/DbdMaxing/releases/latest). Or use the newest successful [Actions build](https://github.com/Tymex321/DbdMaxing/actions/workflows/build.yml) and download the **DbdMaxing-win-x64** artifact.
+2. Run it. It's a single self-contained exe, so you don't need to install .NET.
+3. Start Dead by Daylight, open **Loadout → Perks**, and scroll through your perks once for each role.
+
+> [!NOTE]
+> Windows SmartScreen may warn you because the exe isn't code-signed yet. Click **More info → Run anyway**.
+
+> [!IMPORTANT]
+> Set DBD's **Display mode** to **Borderless** or **Windowed**. Exclusive fullscreen usually returns black screenshots.
+
+## 🔧 How it works
+
+```mermaid
+flowchart LR
+    W[Game watcher<br/>process poll] -->|DBD started| S[Steam reader<br/>loginusers.vdf]
+    S --> P[(Profile store<br/>owned perks / account)]
+    W -->|focused| V[Perk scanner<br/>screen capture + OpenCV]
+    V -->|new perks| P
+    C[Perk catalog<br/>321 perks + icons] --> V
+    M[meta.json<br/>tiers & synergies] --> E[Build engine]
+    P --> E
+    E --> UI[Neon UI<br/>Survivor · Killer builds]
+```
 
 | Step | What happens |
 | --- | --- |
@@ -29,11 +81,11 @@ Tagged versions (`v*`) are also published on the [Releases page](https://github.
 2. Open the **Loadout → Perks** screen as a survivor and scroll through the whole perk list. Then do the same as a killer.
 3. Watch the **Scanner** panel in the app. It shows `+N new: …` as perks are recognised.
 
-### Anti-cheat safety
+## 🔒 Anti-cheat safety
 
 DbdMaxing **only takes screenshots** of the game window, the same way OBS or Discord does. It never opens the game process, reads or writes memory, injects code, or touches network traffic, so there is nothing for Easy Anti-Cheat to flag.
 
-## Data
+## 💾 Data
 
 Everything is stored in `%AppData%\DbdMaxing`:
 
@@ -42,7 +94,7 @@ Everything is stored in `%AppData%\DbdMaxing`:
 - `settings.json` and `dbdmaxing.log`. Attach the log when you report bugs.
 - `meta.override.json` (optional): your own tier list. It has the same format as [`src/DbdMaxing.Core/Data/meta.json`](src/DbdMaxing.Core/Data/meta.json).
 
-## Updating the tier list
+## 📈 Tier list
 
 The build rankings live in [`src/DbdMaxing.Core/Data/meta.json`](src/DbdMaxing.Core/Data/meta.json):
 
@@ -53,7 +105,7 @@ The build rankings live in [`src/DbdMaxing.Core/Data/meta.json`](src/DbdMaxing.C
 
 Perk ids are the lower-case, hyphenated perk names (for example `barbecue-chili`). After a DBD patch, edit this file and push. CI builds a new exe.
 
-## Development
+## 🧰 Development
 
 The project needs the .NET 8 SDK. The solution builds on macOS and Linux as well, because `EnableWindowsTargeting` is set, but the app only runs on Windows.
 
@@ -72,4 +124,11 @@ dotnet publish src/DbdMaxing.App -c Release -r win-x64 --self-contained -p:Publi
 
 Fonts: [Orbitron](https://fonts.google.com/specimen/Orbitron) and [Inter](https://fonts.google.com/specimen/Inter), both under the SIL Open Font License.
 
-*DbdMaxing is a fan project and is not affiliated with Behaviour Interactive. Dead by Daylight and its perk art belong to Behaviour Interactive. Perk icons are downloaded at runtime and are not stored in this repository.*
+
+## 🤝 Contributing
+
+Tier-list tweaks, scanner screenshots and bug reports are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get started, and [SECURITY.md](SECURITY.md) for the anti-cheat policy.
+
+---
+
+<sub>DbdMaxing is a fan project and is not affiliated with Behaviour Interactive. Dead by Daylight and its perk art belong to Behaviour Interactive. Perk icons are downloaded at runtime and are not stored in this repository.</sub>

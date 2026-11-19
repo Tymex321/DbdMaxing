@@ -1,0 +1,40 @@
+name: 🐞 Bug report
+description: Something isn't working
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Launch DbdMaxing
+        2. Start Dead by Daylight
+        3. ...
+  - type: input
+    id: version
+    attributes:
+      label: DbdMaxing version
+      placeholder: v0.1.0
+  - type: dropdown
+    id: display
+    attributes:
+      label: DBD display mode
+      options: [Borderless, Windowed, Fullscreen, Not sure]
+  - type: input
+    id: resolution
+    attributes:
+      label: Screen resolution and Windows version
+      placeholder: 2560x1440, Windows 11 23H2
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: Paste the relevant part of `%AppData%\DbdMaxing\dbdmaxing.log`.
+      render: text
