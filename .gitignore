@@ -7,3 +7,4 @@ publish/
 TestResults/
 .DS_Store
 .idea/
+.claude/

@@ -1,6 +1,449 @@
 <Window x:Class="DbdMaxing.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DbdMaxing" Width="1100" Height="720">
-    <Grid />
+        xmlns:conv="clr-namespace:DbdMaxing.App.Converters"
+        xmlns:vm="clr-namespace:DbdMaxing.App.ViewModels"
+        Title="DbdMaxing" Width="1180" Height="760" MinWidth="960" MinHeight="600"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen" Icon="Assets/app.ico"
+        TextOptions.TextFormattingMode="Display">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="46" ResizeBorderThickness="8" GlassFrameThickness="0" CornerRadius="0" />
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <conv:IconSourceConverter x:Key="Icon" />
+        <conv:PageVisibilityConverter x:Key="PageVis" />
+        <conv:PageCheckedConverter x:Key="PageChecked" />
+        <conv:BoolToVisibilityConverter x:Key="BoolVis" />
+
+        <!-- Diamond-framed perk icon -->
+        <DataTemplate x:Key="PerkDiamond">
+            <Grid Width="96" Margin="6,0" ToolTip="{Binding Description}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid x:Name="Frame" Width="84" Height="84" Background="Transparent">
+                    <Path x:Name="Diamond" Data="M42,3 L81,42 L42,81 L3,42 Z" StrokeThickness="1.5"
+                          Stroke="{DynamicResource RoleAccentBrush}">
+                        <Path.Fill>
+                            <RadialGradientBrush>
+                                <GradientStop Color="#2A1545" Offset="0" />
+                                <GradientStop Color="#0D0914" Offset="1" />
+                            </RadialGradientBrush>
+                        </Path.Fill>
+                    </Path>
+                    <Image Source="{Binding IconSource, Converter={StaticResource Icon}}" Width="74" Height="74"
+                           RenderOptions.BitmapScalingMode="HighQuality" />
+                </Grid>
+                <TextBlock Grid.Row="1" Text="{Binding Name}" TextWrapping="Wrap" TextAlignment="Center"
+                           FontSize="11" Margin="0,6,0,0" />
+            </Grid>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="Frame" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Diamond" Property="Effect" Value="{StaticResource GlowEffect}" />
+                    <Setter TargetName="Diamond" Property="Stroke" Value="{StaticResource GlowBrush}" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- One recommended build -->
+        <DataTemplate x:Key="BuildCard" DataType="{x:Type vm:BuildViewModel}">
+            <Border Style="{StaticResource Card}" Margin="0,0,0,14" ClipToBounds="True">
+                <Grid>
+                    <!-- scan-line sweep when the card appears -->
+                    <Rectangle x:Name="ScanLine" Width="120" HorizontalAlignment="Left" IsHitTestVisible="False" Opacity="0.35">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#009D4DFF" Offset="0" />
+                                <GradientStop Color="#AA9D4DFF" Offset="0.5" />
+                                <GradientStop Color="#009D4DFF" Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.RenderTransform>
+                            <TranslateTransform X="-140" />
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,14">
+                            <TextBlock Text="{Binding Rank}" Style="{StaticResource H2}" Foreground="{StaticResource GlowBrush}" Margin="0,0,12,0" />
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource H2}" />
+                        </StackPanel>
+                        <StackPanel Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="180">
+                            <DockPanel>
+                                <TextBlock Text="SCORE" Style="{StaticResource Label}" />
+                                <TextBlock Text="{Binding Score}" HorizontalAlignment="Right" FontFamily="{StaticResource HeadingFont}" />
+                            </DockPanel>
+                            <ProgressBar Style="{StaticResource ScoreBar}" Value="{Binding ScorePercent, Mode=OneWay}" Margin="0,6,0,0" />
+                        </StackPanel>
+
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Perks}" ItemTemplate="{StaticResource PerkDiamond}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Reasons}" Margin="24,4,0,0" VerticalAlignment="Center">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="0,3">
+                                        <Path Data="M0,4 L4,0 L8,4 L4,8 Z" Fill="{DynamicResource RoleAccentBrush}" Margin="0,4,10,0" VerticalAlignment="Top" />
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" Style="{StaticResource Muted}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="ScanLine" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                             From="-140" To="1100" Duration="0:0:1.1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- Empty state shown when no builds can be made yet -->
+        <DataTemplate x:Key="EmptyHint">
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="NO BUILDS YET" Style="{StaticResource H2}" />
+                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,8,0,0"
+                               Text="Launch Dead by Daylight and open your loadout screen so DbdMaxing can scan your perks, or tick the perks you own on the My Perks page." />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <!-- Outer glow frame -->
+    <Border Margin="12" Background="{StaticResource BgBrush}" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1"
+            Effect="{StaticResource GlowEffect}">
+        <Grid Background="{StaticResource GridBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="46" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- ===== Title bar ===== -->
+            <Border Background="{StaticResource HeaderGradient}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Style="{StaticResource CaptionButton}" Content="&#xE921;" Click="Minimize_Click" ToolTip="Minimize" />
+                        <Button Style="{StaticResource CaptionButton}" Content="&#xE922;" Click="Maximize_Click" ToolTip="Maximize" />
+                        <Button Style="{StaticResource CloseCaptionButton}" Content="&#xE8BB;" Click="Close_Click" ToolTip="Close to tray" />
+                    </StackPanel>
+
+                    <!-- live status pill -->
+                    <Border DockPanel.Dock="Right" Margin="0,0,16,0" VerticalAlignment="Center" CornerRadius="11" Padding="12,4"
+                            BorderThickness="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#14101C" />
+                                <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsGameRunning}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentDarkBrush}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource GlowBrush}" />
+                                        <Setter Property="Effect" Value="{StaticResource SoftGlowEffect}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Margin="0,0,8,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="{StaticResource MutedBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGameRunning}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource GlowBrush}" />
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard x:Name="Pulse" Storyboard="{StaticResource PulseStoryboard}" />
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <StopStoryboard BeginStoryboardName="Pulse" />
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Text="{Binding GameStatus}" FontFamily="{StaticResource HeadingFont}" FontSize="10" />
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                        <Path Data="M9,0 L18,9 L9,18 L0,9 Z" Fill="{StaticResource AccentGradient}" Stroke="{StaticResource GlowBrush}"
+                              StrokeThickness="1" Effect="{StaticResource GlowEffect}" Margin="0,0,12,0" />
+                        <TextBlock Text="DBD" Style="{StaticResource H2}" />
+                        <TextBlock Text="//" Style="{StaticResource H2}" Foreground="{StaticResource GlowBrush}" Margin="4,0" />
+                        <TextBlock Text="MAXING" Style="{StaticResource H2}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ===== Side nav ===== -->
+                <Border Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,1,0">
+                    <DockPanel Margin="0,18,0,16">
+                        <!-- account + scanner telemetry -->
+                        <StackPanel DockPanel.Dock="Bottom" Margin="20,0">
+                            <Rectangle Height="1" Fill="{StaticResource LineBrush}" Margin="0,0,0,14" />
+                            <TextBlock Text="ACCOUNT" Style="{StaticResource Label}" />
+                            <TextBlock Text="{Binding AccountName}" FontFamily="{StaticResource HeadingFont}" FontSize="12"
+                                       TextTrimming="CharacterEllipsis" Margin="0,4,0,12" />
+                            <TextBlock Text="SCANNER" Style="{StaticResource Label}" />
+                            <TextBlock Text="{Binding ScannerStatus}" Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,4" />
+                            <TextBlock Text="{Binding LastScanText}" Foreground="{StaticResource GlowBrush}" FontSize="11" TextWrapping="Wrap" />
+                            <StackPanel Margin="0,12,0,0">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IconProgress}" Value="100">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <TextBlock Text="DOWNLOADING PERK ICONS" Style="{StaticResource Label}" />
+                                <ProgressBar Style="{StaticResource ScoreBar}" Value="{Binding IconProgress, Mode=OneWay}" Margin="0,6,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="BUILDS" Style="{StaticResource Label}" Margin="24,0,0,6" />
+                            <RadioButton Style="{StaticResource NavButton}" GroupName="nav" Content="SURVIVOR"
+                                         IsChecked="{Binding CurrentPage, Converter={StaticResource PageChecked}, ConverterParameter=survivor}" />
+                            <RadioButton Style="{StaticResource NavButton}" GroupName="nav" Content="KILLER"
+                                         IsChecked="{Binding CurrentPage, Converter={StaticResource PageChecked}, ConverterParameter=killer}" />
+                            <TextBlock Text="ACCOUNT" Style="{StaticResource Label}" Margin="24,18,0,6" />
+                            <RadioButton Style="{StaticResource NavButton}" GroupName="nav" Content="MY PERKS"
+                                         IsChecked="{Binding CurrentPage, Converter={StaticResource PageChecked}, ConverterParameter=perks}" />
+                            <RadioButton Style="{StaticResource NavButton}" GroupName="nav" Content="SETTINGS"
+                                         IsChecked="{Binding CurrentPage, Converter={StaticResource PageChecked}, ConverterParameter=settings}" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+
+                <!-- ===== Pages ===== -->
+                <Grid Grid.Column="1" Margin="28,22,20,0">
+
+                    <!-- Survivor builds -->
+                    <DockPanel Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=survivor}">
+                        <DockPanel.Resources>
+                            <SolidColorBrush x:Key="RoleAccentBrush" Color="{StaticResource SurvivorColor}" />
+                        </DockPanel.Resources>
+                        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,18">
+                            <TextBlock Text="SURVIVOR BUILDS" Style="{StaticResource H1}" />
+                            <TextBlock Style="{StaticResource Muted}" Margin="0,6,0,0">
+                                <Run Text="Built from" />
+                                <Run Text="{Binding OwnedSurvivorCount, Mode=OneWay}" Foreground="{StaticResource GlowBrush}" />
+                                <Run Text="owned survivor perks" />
+                            </TextBlock>
+                        </StackPanel>
+                        <Grid>
+                            <ContentControl ContentTemplate="{StaticResource EmptyHint}" VerticalAlignment="Top">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SurvivorBuilds.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+                                <ItemsControl ItemsSource="{Binding SurvivorBuilds}" ItemTemplate="{StaticResource BuildCard}" />
+                            </ScrollViewer>
+                        </Grid>
+                    </DockPanel>
+
+                    <!-- Killer builds -->
+                    <DockPanel Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=killer}">
+                        <DockPanel.Resources>
+                            <SolidColorBrush x:Key="RoleAccentBrush" Color="#B0247A" />
+                        </DockPanel.Resources>
+                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,18">
+                            <StackPanel DockPanel.Dock="Right" VerticalAlignment="Bottom" Width="220">
+                                <TextBlock Text="TUNE FOR KILLER" Style="{StaticResource Label}" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding Killers}" SelectedItem="{Binding SelectedKiller}" DisplayMemberPath="Name" />
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="KILLER BUILDS" Style="{StaticResource H1}" />
+                                <TextBlock Style="{StaticResource Muted}" Margin="0,6,0,0">
+                                    <Run Text="Built from" />
+                                    <Run Text="{Binding OwnedKillerCount, Mode=OneWay}" Foreground="{StaticResource GlowBrush}" />
+                                    <Run Text="owned killer perks" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DockPanel>
+                        <Grid>
+                            <ContentControl ContentTemplate="{StaticResource EmptyHint}" VerticalAlignment="Top">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding KillerBuilds.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+                                <ItemsControl ItemsSource="{Binding KillerBuilds}" ItemTemplate="{StaticResource BuildCard}" />
+                            </ScrollViewer>
+                        </Grid>
+                    </DockPanel>
+
+                    <!-- My perks -->
+                    <DockPanel Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=perks}">
+                        <DockPanel.Resources>
+                            <SolidColorBrush x:Key="RoleAccentBrush" Color="{StaticResource AccentColor}" />
+                        </DockPanel.Resources>
+                        <StackPanel DockPanel.Dock="Top" Margin="0,0,0,14">
+                            <TextBlock Text="MY PERKS" Style="{StaticResource H1}" />
+                            <TextBlock Style="{StaticResource Muted}" Margin="0,6,0,0" TextWrapping="Wrap">
+                                <Run Text="Survivor" />
+                                <Run Text="{Binding OwnedSurvivorCount, Mode=OneWay}" Foreground="{StaticResource GlowBrush}" /><Run Text="/" /><Run Text="{Binding TotalSurvivorCount, Mode=OneWay}" />
+                                <Run Text="  ·  Killer" />
+                                <Run Text="{Binding OwnedKillerCount, Mode=OneWay}" Foreground="{StaticResource GlowBrush}" /><Run Text="/" /><Run Text="{Binding TotalKillerCount, Mode=OneWay}" />
+                                <Run Text="  ·  Perks are added automatically when the scanner sees them in game. Toggle to correct." />
+                            </TextBlock>
+                        </StackPanel>
+                        <DockPanel DockPanel.Dock="Top" Margin="0,0,10,14" LastChildFill="True">
+                            <ComboBox DockPanel.Dock="Left" Width="130" Margin="0,0,10,0" SelectedValuePath="Content"
+                                      SelectedValue="{Binding RoleFilter}">
+                                <ComboBoxItem Content="All" />
+                                <ComboBoxItem Content="Survivor" />
+                                <ComboBoxItem Content="Killer" />
+                            </ComboBox>
+                            <CheckBox DockPanel.Dock="Left" Content="Owned only" IsChecked="{Binding OwnedOnly}" Margin="4,0,16,0" />
+                            <Button DockPanel.Dock="Right" Style="{StaticResource GhostButton}" Content="NONE OWNED"
+                                    Command="{Binding MarkAllVisibleCommand}" CommandParameter="false" Margin="8,0,0,0" />
+                            <Button DockPanel.Dock="Right" Style="{StaticResource GhostButton}" Content="ALL OWNED"
+                                    Command="{Binding MarkAllVisibleCommand}" CommandParameter="true" Margin="8,0,0,0"
+                                    ToolTip="Mark every perk currently shown as owned" />
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="Search perks or characters" />
+                        </DockPanel>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding PerksView}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:PerkItemViewModel}">
+                                        <Border x:Name="Tile" Width="250" Height="74" Margin="0,0,10,10" Background="{StaticResource CardBrush}"
+                                                BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="3" Padding="8"
+                                                ToolTip="{Binding Description}" Opacity="0.55">
+                                            <DockPanel>
+                                                <Grid DockPanel.Dock="Left" Width="56" Height="56" Margin="0,0,10,0">
+                                                    <Path Data="M28,2 L54,28 L28,54 L2,28 Z" Fill="#0D0914" Stroke="{StaticResource AccentDarkBrush}" StrokeThickness="1" />
+                                                    <Image Source="{Binding IconSource, Converter={StaticResource Icon}}" Width="50" Height="50" />
+                                                </Grid>
+                                                <CheckBox DockPanel.Dock="Right" IsChecked="{Binding IsOwned}" VerticalAlignment="Center" />
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding CharacterName}" Style="{StaticResource Muted}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding SourceLabel}" Style="{StaticResource Label}" Foreground="{StaticResource GlowBrush}" FontSize="9" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsOwned}" Value="True">
+                                                <Setter TargetName="Tile" Property="Opacity" Value="1" />
+                                                <Setter TargetName="Tile" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                            </DataTrigger>
+                                            <Trigger SourceName="Tile" Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Tile" Property="BorderBrush" Value="{StaticResource GlowBrush}" />
+                                                <Setter TargetName="Tile" Property="Opacity" Value="1" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+
+                    <!-- Settings -->
+                    <ScrollViewer Visibility="{Binding CurrentPage, Converter={StaticResource PageVis}, ConverterParameter=settings}"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel MaxWidth="720" HorizontalAlignment="Left" Margin="0,0,10,20">
+                            <TextBlock Text="SETTINGS" Style="{StaticResource H1}" Margin="0,0,0,18" />
+
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="SCANNING" Style="{StaticResource H2}" Margin="0,0,0,14" />
+                                    <CheckBox Content="Scan perk icons on screen while Dead by Daylight is focused" IsChecked="{Binding ScanEnabled}" Margin="0,0,0,10" />
+                                    <CheckBox Content="Assume I own every general (non-character) perk" IsChecked="{Binding AssumeGeneralPerksOwned}" Margin="0,0,0,10" />
+                                    <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap">
+                                        To scan, set DBD's display mode to Borderless or Windowed, then open the loadout screen and scroll through your perks once
+                                        for each role. DbdMaxing only takes screenshots of the game window. It never reads game memory or network traffic,
+                                        so Easy Anti-Cheat has nothing to flag.
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock Text="APP" Style="{StaticResource H2}" Margin="0,0,0,14" />
+                                    <CheckBox Content="Start with Windows (in the tray)" IsChecked="{Binding StartWithWindows}" Margin="0,0,0,10" />
+                                    <CheckBox Content="Keep running in the tray when the window is closed" IsChecked="{Binding MinimizeToTray}" Margin="0,0,0,10" />
+                                    <CheckBox Content="Notify me when Dead by Daylight starts" IsChecked="{Binding NotifyOnGameStart}" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Text="DATA" Style="{StaticResource H2}" Margin="0,0,0,10" />
+                                    <TextBlock Text="{Binding DataFolder}" Style="{StaticResource Muted}" Margin="0,0,0,14" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="OPEN DATA FOLDER" Command="{Binding OpenDataFolderCommand}" Margin="0,0,10,0" />
+                                        <Button Content="RE-DOWNLOAD ICONS" Style="{StaticResource GhostButton}" Command="{Binding RedownloadIconsCommand}" Margin="0,0,10,0" />
+                                        <Button Content="RECALCULATE BUILDS" Style="{StaticResource GhostButton}" Command="{Binding RecomputeBuildsCommand}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Loading overlay -->
+                    <Border Background="#E607060B" Visibility="{Binding IsLoading, Converter={StaticResource BoolVis}}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="INITIALIZING" Style="{StaticResource H1}" HorizontalAlignment="Center" />
+                            <TextBlock Text="Loading perk database…" Style="{StaticResource Muted}" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
