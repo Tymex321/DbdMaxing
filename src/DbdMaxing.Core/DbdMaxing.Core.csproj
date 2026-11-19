@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>DbdMaxing.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\perks.json" LogicalName="DbdMaxing.Core.Data.perks.json" />
+    <EmbeddedResource Include="Data\meta.json" LogicalName="DbdMaxing.Core.Data.meta.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="DbdMaxing.Core.Tests" />
+  </ItemGroup>
+</Project>
