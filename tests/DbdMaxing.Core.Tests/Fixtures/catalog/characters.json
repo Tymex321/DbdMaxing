@@ -1,0 +1,74 @@
+{
+ "1": {
+  "id": "Meg",
+  "name": "Meg Thomas",
+  "role": "survivor",
+  "image": "UI/Icons/CharPortraits/S02_MegThomas_Portrait.png",
+  "dlc": null,
+  "perks": [
+   "Adrenaline",
+   "QuickQuiet",
+   "Sprint_Burst"
+  ]
+ },
+ "9": {
+  "id": "Smoke",
+  "name": "David King",
+  "role": "survivor",
+  "image": "UI/Icons/CharPortraits/DLC5/S10_DavidKing_Portrait.png",
+  "dlc": "boreal",
+  "perks": [
+   "DeadHard",
+   "NoMither",
+   "WereGonnaLiveForever"
+  ]
+ },
+ "268435460": {
+  "id": "Witch",
+  "name": "The Hag",
+  "role": "killer",
+  "image": "UI/Icons/CharPortraits/DLC3/K05_TheHag_Portrait.png",
+  "dlc": "fleshAndMud",
+  "perks": [
+   "Hex_Devour_Hope",
+   "Hex_Ruin",
+   "Hex_The_Third_Seal"
+  ]
+ },
+ "268435464": {
+  "id": "Cannibal",
+  "name": "The Cannibal",
+  "role": "killer",
+  "image": "UI/Icons/CharPortraits/Cannibal/K09_TheCannibal_Portrait.png",
+  "dlc": "Cannibal",
+  "perks": [
+   "BBQAndChilli",
+   "FranklinsLoss",
+   "InTheDark"
+  ]
+ },
+ "268435476": {
+  "id": "K21",
+  "name": "The Blight",
+  "role": "killer",
+  "image": "UI/Icons/CharPortraits/Yemen/K21_TheBlight_Portrait.png",
+  "dlc": "Yemen",
+  "perks": [
+   "DragonsGrip",
+   "HexBloodFavor",
+   "HexUndying"
+  ]
+ },
+ "268435481": {
+  "id": "K26",
+  "name": "The Artist",
+  "role": "killer",
+  "image": "UI/Icons/CharPortraits/Ion/K26_TheArtist_Portrait.png",
+  "dlc": "Ion",
+  "perks": [
+   "K26P01",
+   "K26P02",
+   "K26P03"
+  ]
+ }
+}
